@@ -7,7 +7,7 @@ A basic UI will be used to select and load an image.
 
 ### Todo
 1. UI
-2. Decide Disk images
+2. Decode Disk images
 3. Disk II emulation.
 
 ### Parts
