@@ -28,16 +28,18 @@ connection:
 	D6: LOCK
 	
 	<connections to APPLE II disk IF>
-	B1: WRITE
-	C0: PHASE-0
-	C1: PHASE-1
-	C2: PHASE-2
-	C3: PHASE-3
-	C4: READ PULSE (through 74HC125 3state)
-	D2(INT0): WRITE REQUEST (10K ohm pull up for open collector)
-	D3: EJECT
-	D4: WRITE PROTECT (through 74HC125 3state)
-	D7: DRIVE ENABLE
+	B1: WRITE - <- Data stream from Apple Disk Controller.
+	
+	C0: PHASE-0 <- *read by MCU
+	C1: PHASE-1	<- *to determin head position
+	C2: PHASE-2	<- *voltage unsure
+	C3: PHASE-3 <- *cosider running this in the 2nd core. 
+
+	C4: READ PULSE (through 74HC125 3state) -> *Data stream to Apple Controller.
+	D2 (INT0): WRITE REQUEST (10K ohm pull up for open collector) <- *read by MCU, request for write?
+	D3: EJECT <- *read by MCU if disk is ejected?
+	D4: WRITE PROTECT (through 74HC125 3state) -> *signal to Apple Controller that the disk in protected mode.
+	D7: DRIVE ENABLE -> *drive select to Apple Controller / also enable buffers on READ PULSE and WRITE PROTECT.
 	
 	<others>
 	D5: LED
@@ -759,15 +761,15 @@ int SDinit(void)
 	return 1;
 }
 
-// move head
+// move head - *finction to read stepper signals.
 ISR(PCINT1_vect)
 {
-	if (bit_is_set(PIND, 7)) return;
+	if (bit_is_set(PIND, 7)) return; // *Check if D7(DRIVE_ENABLE) is set, return if not the selected drive.
 	
 	unsigned char stp;
 	static unsigned char prevStp = 0;
 
-	stp = (PINC & 0b00001111);
+	stp = (PINC & 0b00001111);  // *stp = lower 4 bit of Port C, C0,C1,C2,C3 = 4bit
 	if (stp != prevStp) {
 		prevStp = stp;
 		unsigned char ofs =
@@ -780,7 +782,7 @@ ISR(PCINT1_vect)
 			unsigned char bt = pgm_read_byte_near(stepper_table + (ofs>>1));
 			prevStp = stp;
 			if (ofs&1) bt &= 0x0f; else bt >>= 4;
-			ph_track += ((bt & 0x08) ? (0xf8 | bt) : bt);
+			ph_track += ((bt & 0x08) ? (0xf8 | bt) : bt);  //ph_track is Phsical Track position.
 			if (ph_track > 196) ph_track = 0;	
 			if (ph_track > 139) ph_track = 139;
 		}
