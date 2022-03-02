@@ -1,16 +1,19 @@
 # SDISK2 ESP
 
-An Apple 2 floppy Emulator using ESP32.
-This an update the original SDISK2 project by Koichi Nishida (2013).
-It uses it to read the Disk controller signals and return the track data from the disk image.
+## An Apple 2 floppy Emulator using ESP32.
+
+This an update the original SDISK2 project by Koichi Nishida (2013).  
+It uses it to read the Disk controller signals and return the track data from the disk image.  
 A basic UI will be used to select and load an image.
 
 ### Todo
+
 1. UI
 2. Decode Disk images
 3. Disk II emulation.
 
 ### Parts
+
 1. ESP32 dev kit 1
 2. SSD1306 i2c OLED module.
 3. SDcard Module
