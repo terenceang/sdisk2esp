@@ -348,3 +348,7 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+*.kicad_prl
+*-backups/
+KiCad/SDisk2 original.kicad_sch
+KiCad/doit-esp32-devkit-kicad-master/
