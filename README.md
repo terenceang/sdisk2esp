@@ -18,7 +18,7 @@ A basic UI will be used to select and load an image.
 2. SSD1306 i2c OLED module.
 3. SDcard Module
 4. TP223 x 3
-5. 74HCT125 (or other 3.3v to 5v translator)
+5. SN74CB3T3245
 
 Original SDISK II project.
 https://tulip-house.ddo.jp/digital/SDISK2/english.html
